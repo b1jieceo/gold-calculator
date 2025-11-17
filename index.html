@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>💰 黃金購買計算器</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            margin-bottom: 20px;
+        }
+        
+        .price-input-section {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .price-input-title {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 12px;
+            color: #333;
+        }
+        
+        .price-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .price-input-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .price-input-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 4px;
+            font-weight: bold;
+        }
+        
+        .price-input-group input {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        
+        .update-btn {
+            width: 100%;
+            padding: 10px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+            transition: background 0.2s;
+        }
+        
+        .update-btn:hover {
+            background: #5568d3;
+        }
+        
+        .input-group {
+            margin-bottom: 30px;
+        }
+        
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #333;
+        }
+        
+        input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            box-sizing: border-box;
+        }
+        
+        .quick-buttons {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 12px;
+        }
+        
+        .quick-btn {
+            padding: 8px;
+            background: #f0f0f0;
+            color: #333;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+        
+        .quick-btn:hover {
+            background: #667eea;
+            color: white;
+        }
+        
+        .quick-btn.active {
+            background: #667eea;
+            color: white;
+        }
+        
+        .price-display {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        
+        .price-item {
+            text-align: center;
+        }
+        
+        .price-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .price-value {
+            font-size: 18px;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .price-calc-note {
+            font-size: 10px;
+            color: #999;
+            margin-top: 3px;
+        }
+        
+        .results {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .result-card {
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .result-card.savings {
+            background: linear-gradient(135deg, #667eea 0%, #667eea 100%);
+        }
+        
+        .result-card.physical {
+            background: linear-gradient(135deg, #764ba2 0%, #764ba2 100%);
+        }
+        
+        .result-title {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            opacity: 0.9;
+        }
+        
+        .result-item {
+            margin-bottom: 12px;
+        }
+        
+        .result-label {
+            font-size: 12px;
+            margin-bottom: 4px;
+            opacity: 0.9;
+        }
+        
+        .result-value {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .analysis {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .analysis h3 {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .diff-box {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .diff-box.positive {
+            background: #d4edda;
+            border: 1px solid #28a745;
+            color: #155724;
+        }
+        
+        .diff-box.negative {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        
+        .diff-text {
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+        
+        .diff-value {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .suggestion {
+            background: #e7f3ff;
+            border: 1px solid #b3d9ff;
+            padding: 15px;
+            border-radius: 8px;
+            color: #004085;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+        
+        .footer {
+            color: white;
+            text-align: center;
+            margin-top: 30px;
+            font-size: 12px;
+            opacity: 0.8;
+        }
+        
+        .update-time {
+            text-align: center;
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 20px;
+        }
+        
+        @media (max-width: 600px) {
+            .header h1 {
+                font-size: 20px;
+            }
+            
+            .card {
+                padding: 20px;
+            }
+            
+            .results {
+                grid-template-columns: 1fr;
+            }
+            
+            .quick-buttons {
+                grid-template-columns: 1fr;
+            }
+            
+            .price-inputs {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>💰 黃金購買計算器</h1>
+            <p>一秒幫你算清楚：黃金存摺 vs 實體黃金</p>
+            <p style="font-size: 12px; margin-top: 10px; opacity: 0.8;">版權所有人: Jay | IG: @b1jieceo2</p>
+        </div>
+        
+        <div class="card">
+            <div class="update-time">
+                ✓ 最後更新：<span id="lastUpdate">載入中...</span>
+            </div>
+            
+            <!-- 金價輸入區 -->
+            <div class="price-input-section">
+                <div class="price-input-title">📊 更新金價</div>
+                <div class="price-inputs">
+                    <div class="price-input-group">
+                        <div class="price-input-label">黃金存摺（元/克）</div>
+                        <input type="number" id="savingsPriceInput" value="4200" placeholder="例：4200">
+                    </div>
+                    <div class="price-input-group">
+                        <div class="price-input-label">實體黃金（元/錢）</div>
+                        <input type="number" id="physicalPriceQianInput" value="16030" placeholder="例：16030">
+                    </div>
+                </div>
+                <button class="update-btn" onclick="updatePrices()">更新金價</button>
+                <div style="font-size: 11px; color: #666; margin-top: 8px;">
+                    💡 提示：實體黃金的元/克會自動轉換（元/錢 ÷ 3.75）
+                </div>
+            </div>
+            
+            <div class="input-group">
+                <label for="investment">💵 投入金額（台幣）</label>
+                <input type="number" id="investment" value="1000000" placeholder="輸入金額">
+                <div class="quick-buttons">
+                    <button class="quick-btn" onclick="setInvestment(100000)">100,000</button>
+                    <button class="quick-btn" onclick="setInvestment(500000)">500,000</button>
+                    <button class="quick-btn" onclick="setInvestment(1000000)">1,000,000</button>
+                </div>
+            </div>
+            
+            <div class="price-display">
+                <div class="price-item">
+                    <div class="price-label">黃金存摺</div>
+                    <div class="price-value" id="savingsPrice">4,200</div>
+                    <div class="price-label">元/克</div>
+                </div>
+                <div class="price-item">
+                    <div class="price-label">實體黃金</div>
+                    <div class="price-value" id="physicalPrice">4,274</div>
+                    <div class="price-label">元/克</div>
+                    <div class="price-calc-note" id="physicalCalcNote">16030÷3.75</div>
+                </div>
+            </div>
+            
+            <div class="results">
+                <div class="result-card savings">
+                    <div class="result-title">📊 黃金存摺</div>
+                    <div class="result-item">
+                        <div class="result-label">克數</div>
+                        <div class="result-value" id="savingsGrams">238</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-label">錢數</div>
+                        <div class="result-value" id="savingsQian">63</div>
+                    </div>
+                </div>
+                
+                <div class="result-card physical">
+                    <div class="result-title">🏆 實體黃金</div>
+                    <div class="result-item">
+                        <div class="result-label">克數</div>
+                        <div class="result-value" id="physicalGrams">234</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-label">錢數</div>
+                        <div class="result-value" id="physicalQian">62</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="analysis">
+            <h3>📈 克數差異分析</h3>
+            
+            <div class="diff-box" id="diffBox">
+                <div class="diff-text">黃金存摺多 4 克 (1 錢)</div>
+                <div class="diff-value">差價：17,000 元</div>
+            </div>
+            
+            <div class="suggestion">
+                💡 <strong>建議：</strong><span id="suggestion"></span>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>ℹ️ 計算公式：投入金額 ÷ 每克價格 = 克數<br/>
+            1 錢 = 3.75 克 | 四捨五入到整數</p>
+            
+            <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.3); font-size: 11px; opacity: 0.7; text-align: left; max-width: 500px; margin-left: auto; margin-right: auto;">
+                <strong>⚠️ 免責聲明</strong><br/>
+                1. 本計算器僅供參考，數據來自公開資訊，不構成投資建議。<br/>
+                2. 實際黃金價格會因時間、銀行、銀樓而異，建議以最新牌價為準。<br/>
+                3. 計算結果已四捨五入，實際克數和錢數可能有誤差。<br/>
+                4. 投資黃金涉及風險，請自行評估風險承受度或諮詢專業投資顧問。<br/>
+                5. 黃金存摺和實體黃金的稅務問題、保管費、手續費請自行查詢各銀行及銀樓的最新資訊。<br/>
+                6. 作者對使用本計算器所造成的任何損失或不便不負任何責任。
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 全局變數
+        let goldSavingsPrice = 4200;        // 元/克
+        let physicalGoldPricePerGram = 4274; // 元/克（由元/錢轉換）
+        let physicalGoldPricePerQian = 16030; // 元/錢（原始輸入）
+        const GRAM_PER_QIAN = 3.75;
+        
+        // 投入金額變化時的計算
+        document.getElementById('investment').addEventListener('input', calculate);
+        
+        // 更新金價函數
+        function updatePrices() {
+            const savingsInput = document.getElementById('savingsPriceInput').value;
+            const physicalQianInput = document.getElementById('physicalPriceQianInput').value;
+            
+            if (!savingsInput || !physicalQianInput) {
+                alert('請輸入所有金價');
+                return;
+            }
+            
+            goldSavingsPrice = parseFloat(savingsInput);
+            physicalGoldPricePerQian = parseFloat(physicalQianInput);
+            physicalGoldPricePerGram = Math.round(physicalGoldPricePerQian / GRAM_PER_QIAN);
+            
+            // 更新顯示
+            updatePriceDisplay();
+            calculate();
+        }
+        
+        // 更新金價顯示
+        function updatePriceDisplay() {
+            document.getElementById('savingsPrice').textContent = formatNumber(goldSavingsPrice);
+            document.getElementById('physicalPrice').textContent = formatNumber(physicalGoldPricePerGram);
+            document.getElementById('physicalCalcNote').textContent = 
+                `${formatNumber(physicalGoldPricePerQian)}÷3.75`;
+        }
+        
+        // 快速設定投入金額
+        function setInvestment(amount) {
+            document.getElementById('investment').value = amount;
+            // 更新按鈕狀態
+            document.querySelectorAll('.quick-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            calculate();
+        }
+        
+        // 主要計算函數
+        function calculate() {
+            const investment = parseInt(document.getElementById('investment').value) || 0;
+            
+            // 計算克數（四捨五入）
+            const savingsGrams = Math.round(investment / goldSavingsPrice);
+            const physicalGrams = Math.round(investment / physicalGoldPricePerGram);
+            
+            // 計算錢數（四捨五入）
+            const savingsQian = Math.round(savingsGrams / GRAM_PER_QIAN);
+            const physicalQian = Math.round(physicalGrams / GRAM_PER_QIAN);
+            
+            // 計算差異
+            const gramsDiff = savingsGrams - physicalGrams;
+            const qianDiff = savingsQian - physicalQian;
+            const priceDiff = gramsDiff * physicalGoldPricePerGram;
+            
+            // 更新 UI
+            updateResults(savingsGrams, savingsQian, physicalGrams, physicalQian, gramsDiff, qianDiff, priceDiff);
+        }
+        
+        // 更新 UI 結果
+        function updateResults(savingsGrams, savingsQian, physicalGrams, physicalQian, gramsDiff, qianDiff, priceDiff) {
+            // 克數和錢數
+            document.getElementById('savingsGrams').textContent = formatNumber(savingsGrams);
+            document.getElementById('savingsQian').textContent = formatNumber(savingsQian);
+            document.getElementById('physicalGrams').textContent = formatNumber(physicalGrams);
+            document.getElementById('physicalQian').textContent = formatNumber(physicalQian);
+            
+            // 差異分析
+            const diffBox = document.getElementById('diffBox');
+            const isPositive = gramsDiff > 0;
+            
+            diffBox.className = `diff-box ${isPositive ? 'positive' : 'negative'}`;
+            diffBox.innerHTML = `
+                <div class="diff-text">黃金存摺 ${isPositive ? '多' : '少'} ${Math.abs(gramsDiff)} 克 (${Math.abs(qianDiff)} 錢)</div>
+                <div class="diff-value">差價：${formatNumber(Math.abs(priceDiff))} 元</div>
+            `;
+            
+            // 建議
+            const suggestion = document.getElementById('suggestion');
+            if (isPositive) {
+                suggestion.textContent = `黃金存摺在這個金額下比較便宜，便宜 ${formatNumber(Math.abs(priceDiff))} 元。如果你重視便利性和成本，黃金存摺是較好的選擇。`;
+            } else {
+                suggestion.textContent = `實體黃金在這個金額下比較便宜，省下 ${formatNumber(Math.abs(priceDiff))} 元。但如果你不想自己保管，黃金存摺也是不錯的選項。`;
+            }
+        }
+        
+        // 格式化數字
+        function formatNumber(num) {
+            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        }
+        
+        // 初始化
+        function init() {
+            // 設定更新時間
+            updateTime();
+            // 首次計算
+            calculate();
+        }
+        
+        // 更新時間
+        function updateTime() {
+            const now = new Date();
+            const timeStr = now.toLocaleString('zh-TW', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+            document.getElementById('lastUpdate').textContent = timeStr;
+        }
+        
+        // 頁面加載完成時初始化
+        window.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
